@@ -47,7 +47,7 @@ public class UserBookingService {
 
     public Boolean signUpUser(User newUser){
         try{
-            boolean userExistsAlready = userList.stream().anyMatch(u -> u.getName().equalsIgnoreCase(newUser.getName()));
+            boolean userExistsAlready = userList.stream().anyMatch(u -> u.getName().equalsIgnoreCase(newUser.getName())); // Checking the "newUser" name while Ignoring Letter Case
             if (userExistsAlready){
                 System.out.println("User already exists.");
                 return Boolean.FALSE;
@@ -66,6 +66,20 @@ public class UserBookingService {
         catch (IOException exception){
             System.out.println("Error while signing up user.");
             return Boolean.FALSE;
+        }
+    }
+
+    // Show all booked tickets of the currently logged-in user
+    public void fetchBookings(){
+        Optional<User> userFetched = userList.stream().filter(u -> {
+            return u.getName().equals(user.getName()) && PasswordHashUtil.checkPassword(user.getPassword() , u.getHashedPassword());
+        }).findFirst();
+
+        if (userFetched.isPresent()){
+            userFetched.get().printTickets();
+        }
+        else {
+            System.out.println("Invalid credentials. Cannot fetch bookings.");
         }
     }
 }
