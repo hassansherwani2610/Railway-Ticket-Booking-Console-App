@@ -1,0 +1,30 @@
+[
+  {
+    "user_id": "hs001",
+    "name": "Hassan Sherwani",
+    "hashed_password": "hashed123",
+    "tickets_booked": [
+      {
+        "source": "Karachi Cantt",
+        "destination": "Lahore Junction",
+        "date_of_travel": "2024-01-15T18:30:00Z",
+        "train": {
+          "train_id": "greenline",
+          "train_no": 5,
+          "seats": [
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0]
+          ],
+          "stations": {
+            "Karachi Cantt": "08:00:00",
+            "Hyderabad": "10:30:00",
+            "Multan Cantt": "18:00:00",
+            "Lahore Junction": "23:45:00"
+          }
+        }
+      }
+    ]
+  }
+]
