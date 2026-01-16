@@ -2,6 +2,7 @@ package org.example.app.services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.app.entities.Train;
 import org.example.app.entities.User;
 import org.example.app.utils.PasswordHashUtil;
 
@@ -67,6 +68,11 @@ public class UserBookingService {
             System.out.println("Error while signing up user.");
             return Boolean.FALSE;
         }
+    }
+
+    // To fetch Seats of Train
+    public List<List<Integer>> fetchSeats(Train train){
+        return train.getSeats();
     }
 
     // Show all booked tickets of the currently logged-in user
