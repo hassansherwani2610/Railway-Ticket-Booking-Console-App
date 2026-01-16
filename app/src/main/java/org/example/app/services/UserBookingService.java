@@ -83,9 +83,9 @@ public class UserBookingService {
         }
     }
 
-    // To cancel the ticket with "ticketId"
+    // To cancel the ticket with the help of "ticketId" and save changes in the file (Local DB)
     public boolean cancelBooking(String ticketId){
-        if (ticketId == null || ticketId.isEmpty()){
+        if (ticketId == null || ticketId.isEmpty()){ // To check if "ticketId" is null or empty
             System.out.println("Ticket ID cannot be null or empty.");
             return false;
         }
@@ -95,27 +95,30 @@ public class UserBookingService {
             u.getName().equals(user.getName()) && PasswordHashUtil.checkPassword(user.getPassword() , u.getHashedPassword())
         ).findFirst();
 
+        // If Logged-in user is not found
         if (!findLoggedInUser.isPresent()){
             System.out.println("User not found.");
             return false;
         }
 
-        User loggedInUser = findLoggedInUser.get();
+        User loggedInUser = findLoggedInUser.get(); // If Logged-in user is found
 
+        // Remove that Logged-in user ticket with help of "ticketId"
         boolean removeTicket = loggedInUser.getTicketsBooked().removeIf(ticket -> ticket.getTicketId().equals(ticketId));
 
-        if (removeTicket){
-            try{
-                savesUserListToFile();
+
+        if (removeTicket){ // If ticket is successfully removed
+            try{ // Try to save changes in the file (Local DB)
+                savesUserListToFile(); // Save the changes in the file (Local DB)
                 System.out.println("Ticket with ID: " + ticketId + " - has been canceled.");
                 return true;
             }
-            catch (IOException exception){
+            catch (IOException exception){ // If changes is not saved in the file (Local DB)
                 System.out.println("Failed to update booking data.");
                 return false;
             }
         }
-        else {
+        else { // If ticket is not removed
             System.out.println("No ticket found with ID: " + ticketId);
             return false;
         }
