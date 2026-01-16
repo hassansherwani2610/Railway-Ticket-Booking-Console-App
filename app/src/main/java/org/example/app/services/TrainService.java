@@ -7,6 +7,7 @@ import org.example.app.entities.Train;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TrainService {
 
@@ -19,4 +20,28 @@ public class TrainService {
         trainList = objectMapper.readValue(trains, new TypeReference<List<Train>>(){});
     }
 
+    // To save the changes in file (Local DB)
+    private void saveTrainListToFile(){
+        try{
+            objectMapper.writeValue(new File(TRAIN_FINAL_PATH) , trainList); // To save date of "trainList" in file (Local DB)
+        }
+        catch (IOException exception){
+            System.out.println("Unable to save train data. Please try again later.");
+        }
+    }
+
+    // This checks whether the TRAIN's go the source and destination input by USER
+    private boolean validTrain(Train train , String source , String destination){
+        List<String> stations = train.getStations().stream().map(String::toLowerCase).toList();
+
+        int sourceIndex = stations.indexOf(source.toLowerCase());
+        int destinationIndex = stations.indexOf(destination.toLowerCase());
+
+        return sourceIndex >= 0 && destinationIndex >= 0 && sourceIndex < destinationIndex;
+    }
+
+    // This tells us that the train is valid to go the desired source and destination
+    public List<Train> searchTrains(String source , String destination){
+        return trainList.stream().filter(train -> validTrain(train, source, destination)).collect(Collectors.toList());
+    }
 }
