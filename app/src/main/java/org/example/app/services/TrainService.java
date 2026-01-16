@@ -8,7 +8,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class TrainService {
 
@@ -63,6 +65,17 @@ public class TrainService {
 
     // To update the Data of already existing Train
     public void updateTrain(Train updatedTrain){
+        // Find the index of the train with the same trainId
+        OptionalInt indexOfTrain = IntStream.range(0 , trainList.size()).filter(train -> trainList.get(train).getTrainId().equalsIgnoreCase(updatedTrain.getTrainId())).findFirst();
 
+        if (indexOfTrain.isPresent()){
+            // If found, replace the existing train with the updated one
+            trainList.set(indexOfTrain.getAsInt() , updatedTrain);
+            saveTrainListToFile();
+        }
+        else {
+            // If not found, treat it as adding a new train
+            addTrain(updatedTrain);
+        }
     }
 }
