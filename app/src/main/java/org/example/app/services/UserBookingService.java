@@ -82,4 +82,42 @@ public class UserBookingService {
             System.out.println("Invalid credentials. Cannot fetch bookings.");
         }
     }
+
+    // To cancel the ticket with "ticketId"
+    public boolean cancelBooking(String ticketId){
+        if (ticketId == null || ticketId.isEmpty()){
+            System.out.println("Ticket ID cannot be null or empty.");
+            return false;
+        }
+
+        // Find the logged-in user in the "userList"
+        Optional<User> findLoggedInUser = userList.stream().filter(u ->
+            u.getName().equals(user.getName()) && PasswordHashUtil.checkPassword(user.getPassword() , u.getHashedPassword())
+        ).findFirst();
+
+        if (!findLoggedInUser.isPresent()){
+            System.out.println("User not found.");
+            return false;
+        }
+
+        User loggedInUser = findLoggedInUser.get();
+
+        boolean removeTicket = loggedInUser.getTicketsBooked().removeIf(ticket -> ticket.getTicketId().equals(ticketId));
+
+        if (removeTicket){
+            try{
+                savesUserListToFile();
+                System.out.println("Ticket with ID: " + ticketId + " - has been canceled.");
+                return true;
+            }
+            catch (IOException exception){
+                System.out.println("Failed to update booking data.");
+                return false;
+            }
+        }
+        else {
+            System.out.println("No ticket found with ID: " + ticketId);
+            return false;
+        }
+    }
 }
